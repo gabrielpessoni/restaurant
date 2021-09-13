@@ -1,12 +1,12 @@
 export default {
     methods: {
         isDesktop() {
-            const width = window.innnerWidth;
-            return width > 767;
-          },
-          isSmallScreens(){
-            const width = window.innnerWidth;
+            const width = window.innerWidth;
+            return width > 1265;
+        },
+        isSmallScreens() {
+            const width = window.innerWidth;
             return width < 767;
-          }
+        }
     }
 };
