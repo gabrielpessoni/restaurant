@@ -117,7 +117,6 @@ export default {
     
     ul{
       display: flex;
-      justify-content: center;
       margin: 20px;
       overflow: scroll;
 
