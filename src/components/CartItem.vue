@@ -1,10 +1,6 @@
 <template>
   <div class="item">
-    <div class="item--quantity">
-      <button class="buttons" @click="decreaseQuantity(item.id)" :disabled="item.quantity === 0">-</button>
-      <span class="number">{{item.quantity}}</span>
-      <button class="buttons" @click="increaseQuantity(item.id)">+</button>
-    </div>
+    <Quantity :item="item" class="item--quantity"/>
     <div class="item--img-container">
       <img class="item--img" :src="imagePath" />
     </div>
@@ -17,10 +13,15 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
+import Quantity from './Quantity';
+
 export default {
   name: "CartItem",
-  props: {
+  components: {
+    Quantity
+  },
+  props: { 
     item: {},
   },
   filters: {
@@ -36,12 +37,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      'increaseQuantity',
-      'decreaseQuantity'
-    ])
-
-  }
+    ...mapActions(["increaseQuantity", "decreaseQuantity"]),
+  },
 };
 </script>
 
@@ -51,12 +48,12 @@ export default {
   padding: 20px 0;
   border-bottom: 1px solid @light-grey;
 
-  &--quantity{
+  &--quantity {
     display: flex;
     align-items: center;
     padding-right: 40px;
 
-    .number{
+    .number {
       font-weight: 500;
       font-size: 18px;
       color: @yellow;
@@ -71,11 +68,13 @@ export default {
       background: none;
       border: 0;
 
-      &:focus{outline: 0;}
+      &:focus {
+        outline: 0;
+      }
     }
   }
 
-  &--img-container{
+  &--img-container {
     border-radius: 8px;
     background: @light-yellow;
     width: 81px;
@@ -90,7 +89,7 @@ export default {
     margin: auto;
   }
 
-  &--name{
+  &--name {
     font-weight: 600;
     font-size: 18px;
     margin: 0;
@@ -103,7 +102,7 @@ export default {
     text-decoration: underline;
   }
 
-  .content{
+  .content {
     flex-grow: 1;
     padding: 0 20px;
   }
@@ -115,30 +114,28 @@ export default {
     color: @yellow;
   }
 
-  @media @tablets{
-    flex-wrap: wrap; ;
-    &--img-container{
+  @media @tablets {
+    flex-wrap: wrap;
+    &--img-container {
       order: 1;
     }
 
-    .content{
+    .content {
       order: 2;
     }
 
-    &--quantity{
+    &--quantity {
       order: 3;
       padding: 0;
       width: 81px;
       justify-content: center;
     }
 
-    &--price{
+    &--price {
       order: 4;
       padding: 0 20px;
       margin: 5px 0;
     }
   }
-
-
 }
 </style>
