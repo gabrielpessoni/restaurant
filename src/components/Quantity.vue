@@ -9,37 +9,65 @@
     </button>
     <span class="number">{{ item.quantity }}</span>
     <button class="buttons" @click="onIncreaseButtonClick">+</button>
+    <Modal :show="showModal">
+      <div class="modal-content">
+        <h2>Deseja remover esse item do carinho?</h2>
+          <button class="secondary-button" @click="onCancelButtonClick">Cancelar</button>
+          <button class="primary-button" @click="onRemoveButtonClick">Sim, remover</button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import Modal from "./Modal.vue";
 
 export default {
-    props: {
-        item: {},
-        useStore:{
+  components: {
+    Modal,
+  },
+  props: {
+    item: {},
+    useStore: {
       type: Boolean,
-      default: true
-       }
+      default: true,
     },
-    methods: {
+  },
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+  methods: {
     ...mapActions(["increaseQuantity", "decreaseQuantity"]),
-    onDecreaseButtonClick(){
-        if(this.useStore){
-            this.decreaseQuantity(this.item.id)
-        }
+    onDecreaseButtonClick() {
+      if (this.useStore) {
+        this.decreaseQuantity(this.item.id);
+        if (!this.item.quantity) this.showModal = true;
+        return;
+      }
 
-        --this.item.quantity;
+      --this.item.quantity;
     },
-    onIncreaseButtonClick(){
-        if(this.useStore){
-            this.increaseQuantity(this.item.id);
-            return;
-        }
-         ++this.item.quantity;
+    onIncreaseButtonClick() {
+      if (this.useStore) {
+        this.increaseQuantity(this.item.id);
+        return;
+      }
+      ++this.item.quantity;
+    },
+    onCancelButtonClick() {
+      this.increaseQuantity(this.item.id);
+      this.showModal = false;
+    },
+    onRemoveButtonClick(){
+      this.showModal = false;
+      this.$nextTick(() => {
+         this.$store.dispatch('removeFromCart',this.item.id);
+      });
     }
-    }
+  },
 };
 </script>
 
@@ -66,6 +94,14 @@ export default {
 
     &:focus {
       outline: 0;
+    }
+  }
+
+  .modal-content {
+    text-align: center;
+    button {
+      margin-left: 10px;
+      margin-top: 20px;
     }
   }
 }

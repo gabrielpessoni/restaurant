@@ -4,12 +4,19 @@
       >←️ Voltar</router-link
     >
     <h2 class="cart--title">Seu pedido</h2>
-    <p v-if="hasNoItem">Seu carrinho ainda está vazio</p>
-    <CartItem v-for="item in cartList" :key="item.id" :item="item" />
+    <div class="cart--content">
+      <p v-if="hasNoItem">Seu carrinho ainda está vazio</p>
+      <transition-group name="list">
+        <CartItem v-for="item in cartList" :key="item.id" :item="item" />
+      </transition-group>
+    </div>
     <div class="cart--total" v-if="!hasNoItem">
       <span>Total: </span>
       <span class="price">{{ getCartTotal | currency }}</span>
     </div>
+    <button class="primary-button payment-button" @click="goToPayment">
+      Finalizar Compra
+    </button>
   </div>
 </template>
 
@@ -17,6 +24,7 @@
 import CartItem from "./CartItem";
 import { mapGetters } from "vuex";
 import Mixin from "@/mixins/mixins";
+
 
 export default {
   name: "Cart",
@@ -38,8 +46,13 @@ export default {
     },
     hasNoItem() {
       return !this.cartList.length;
-    },
+    }
   },
+  methods: {
+        goToPayment() {
+            this.$router.push({ name: 'Payment' });
+        }
+    }
 };
 </script>
 
@@ -47,8 +60,11 @@ export default {
 .cart {
   background: white;
   width: 643px;
+  height: 100vh;
   min-width: 643px;
   padding: 50px;
+  display: flex;
+  flex-direction: column;
 
   &--go-back {
     font-weight: 600;
@@ -63,6 +79,11 @@ export default {
     font-size: 24px;
   }
 
+  &--content {
+    flex-grow: 1;
+    overflow: auto;
+  }
+
   &--total {
     font-weight: 600;
     font-size: 18px;
@@ -75,10 +96,29 @@ export default {
     }
   }
 
+  .payment-button {
+    width: 397px;
+    margin: 20px auto;
+  }
+
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
   @media @tablets {
     width: 100%;
     min-width: unset;
     padding: 50px 20px 20px;
+
+    .payment-button {
+      width: 100%;
+    }
   }
 }
 </style>
