@@ -111,12 +111,15 @@ export default {
     }
   }
 
-  @media @smartphones{
+  @media @small-desktops{
     width: 100%;
+    max-width: 800px;
+    margin: auto;
     height: fit-content;
     
     ul{
       display: flex;
+      justify-content: space-around;
       margin: 20px;
       overflow: scroll;
 
@@ -124,6 +127,11 @@ export default {
         min-width: 78px;
       }
 
+    }
+  }
+  @media @smartphones{
+    ul {
+      justify-content: unset;
     }
   }
 }

@@ -1,8 +1,6 @@
 <template>
   <div class="cart">
-    <router-link to="/" class="cart--go-back" v-if="isSmallScreens()"
-      >←️ Voltar</router-link
-    >
+    <router-link to="/" class="cart--go-back">←️ Voltar</router-link>
     <h2 class="cart--title">Seu pedido</h2>
     <div class="cart--content">
       <p v-if="hasNoItem">Seu carrinho ainda está vazio</p>
@@ -14,7 +12,11 @@
       <span>Total: </span>
       <span class="price">{{ getCartTotal | currency }}</span>
     </div>
-    <button class="primary-button payment-button" @click="goToPayment">
+    <button
+      class="primary-button payment-button"
+      v-if="!!cartList.length && !isPaymentScreen"
+      @click="goToPayment"
+    >
       Finalizar Compra
     </button>
   </div>
@@ -24,7 +26,6 @@
 import CartItem from "./CartItem";
 import { mapGetters } from "vuex";
 import Mixin from "@/mixins/mixins";
-
 
 export default {
   name: "Cart",
@@ -46,31 +47,31 @@ export default {
     },
     hasNoItem() {
       return !this.cartList.length;
+    },
+    isPaymentScreen() {
+      return this.$route.name === 'Payment'
     }
   },
   methods: {
-        goToPayment() {
-            this.$router.push({ name: 'Payment' });
-        }
-    }
+    goToPayment() {
+      this.$router.push({ name: "Payment" });
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .cart {
   background: white;
-  width: 643px;
+  width: 520px;
   height: 100vh;
-  min-width: 643px;
-  padding: 50px;
+  min-width: 520px;
+  padding: 30px 30px 100px 30px;
   display: flex;
   flex-direction: column;
 
   &--go-back {
-    font-weight: 600;
-    font-size: 18px;
-    text-decoration: none;
-    color: black;
+    display: none;
   }
 
   &--title {
@@ -111,13 +112,23 @@ export default {
     transform: translateY(30px);
   }
 
-  @media @tablets {
+  @media @small-desktops {
     width: 100%;
+    max-width: 800px;
+    margin: auto;
     min-width: unset;
     padding: 50px 20px 20px;
 
     .payment-button {
       width: 100%;
+    }
+
+    &--go-back {
+      display: block;
+      font-weight: 600;
+      font-size: 18px;
+      text-decoration: none;
+      color: black;
     }
   }
 }

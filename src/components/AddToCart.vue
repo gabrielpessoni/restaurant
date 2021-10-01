@@ -1,6 +1,6 @@
 <template>
   <div class="add-cart">
-     <router-link to="/" class="add-cart--go-back" v-if="isSmallScreens()">←️ Voltar</router-link>
+     <router-link to="/" class="add-cart--go-back">←️ Voltar</router-link>
      <Item :item="item" class="add-cart--item"/>
      <div class="add-cart--container">
        <span>Quantidade</span>
@@ -36,6 +36,9 @@ export default {
     }
   },
     created() {
+      if(this.isDesktop()) {
+        this.$router.push({name:'Home'});
+      }
       axios.get(`http://localhost:3000/${this.selectedCategory}/${this.id}`).then((response) => {
            this.item = { quantity: 1, observations: '', ...response.data};
           // this.isLoading = false;
@@ -52,6 +55,8 @@ export default {
 
 <style lang="less" scoped>
 .add-cart{
+  max-width: 600px;
+  margin: auto;
   padding: 50px 20px;
 
   &--go-back {
@@ -63,6 +68,7 @@ export default {
 
   &--item{
     margin-top: 50px;
+    margin: 20px auto;
   }
 
   &--container{
@@ -92,11 +98,18 @@ export default {
 
   button{
     width: calc(100% - 40px);
-    position: fixed;
-    bottom: 30px;
-    left: 20px;
-    right: 20px;
+    max-width: 300px;
+    display: block;
+    margin: 30px auto;
+  }
 
+  @media @smartphones {
+    button{
+      position: fixed;
+      bottom: 30px;
+      width: calc(100% - 40px);
+      max-width: unset;
+    }
   }
 }
 
